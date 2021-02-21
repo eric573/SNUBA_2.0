@@ -1,5 +1,5 @@
-from synthesizer import Synthesizer
-from loader import DataLoader
+from program_synthesis.synthesizer import Synthesizer
+from data.loader import DataLoader
 import sklearn.linear_model
 
 """
@@ -18,7 +18,7 @@ class HeuristicGenerator(object):
 loader = DataLoader()
 train_primitive_matrix, val_primitive_matrix, test_primitive_matrix, \
             train_ground, val_ground, test_ground, \
-            train_plots, val_plots, test_plots = loader.load_data(None, "../data/imdb/")
+            train_plots, val_plots, test_plots = loader.load_data(None, "./data/imdb/")
 
 model = sklearn.linear_model.LogisticRegression()
 
