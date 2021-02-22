@@ -1,6 +1,7 @@
 import itertools
 import numpy as np
 from tqdm import tqdm, trange
+from utils import calcF1
 np.seterr('raise')
 
 class Synthesizer(object):
@@ -33,25 +34,7 @@ class Synthesizer(object):
         return heuristic_model.predict_proba(X_prime)
 
     def findBeta(self, y_prob, label):
-        def calcF1(y_star, y_prob, beta):
-            # Label data
-            idx_pos = np.where(y_prob >= 0.5 + beta)
-            idx_zero = np.where(np.abs(y_prob - 0.5) < beta)
-            idx_neg = np.where(y_prob <= 0.5 - beta)
-            y_hat = np.zeros(y_prob.shape[0])
-            y_hat[idx_neg] = -1
-            y_hat[idx_zero] = 0
-            y_hat[idx_pos] = 1
-
-            # F1 calculation
-            var = np.sum(np.abs(y_hat))
-            precision = (np.sum(y_hat == y_star) / var) if var != 0 else 0
-            recall = np.sum(y_hat == y_star) / len(y_hat)
-            if recall + precision == 0:
-                return 0
-            return 2 * (precision * recall) / (precision + recall)
-
-
+        
         beta_list = np.arange(0, 0.55, 0.05)
         f1 = np.zeros(len(beta_list))
         for j in range(len(beta_list)):
