@@ -52,9 +52,9 @@ class Verifier(object):
         self.y_tilde_U = self.gen_model.marginals(self.primitive_XU)
         self.y_tilde_L = self.gen_model.marginals(self.primitive_XL)
 
-    def find_vague_points(self, nu=0.1):
+    def get_uncertain_points(self, nu=0.1):
         """
         nu is synonym for gamma in their code
         use findNu for accurate nu
         """
-        return self.y_tilde_L[np.where(self.y_tilde_L - 0.5) <= nu]
+        return self.y_tilde_L[np.where(np.abs(self.y_tilde_L - 0.5)) <= nu]
