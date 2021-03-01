@@ -1,5 +1,5 @@
 import numpy as np
-from utils import calcF1
+from utils import calcF1, calcJaccard
 
 class Pruner(object):
     def __init__(self, H, H_C, y_star, primitive_XL, primitive_XU, n, w):
@@ -21,8 +21,8 @@ class Pruner(object):
             y_U = h.predict(self.primitive_XU)
             j_score = calcJaccard(y_U, self.n)
 
-            if w * (j_score + f_score) >= bestScore:
+            if self.w * (j_score + f_score) >= bestScore:
                 h_best = (h, beta)
-                bestScore = (1 - w) * j_score + w * f_score
+                bestScore = (1 - self.w) * j_score + self.w * f_score
 
         return h_best
