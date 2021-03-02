@@ -29,8 +29,11 @@ class Synthesizer(object):
         for D_prime in range(1, min(self.min_D, self.primitive_X.shape[1] + 1)):
             idx_comb = itertools.combinations(range(self.primitive_X.shape[1]), D_prime)
             for comb in tqdm(idx_comb):
+                # print(comb)
                 X_prime = self.primitive_X[:,np.array(comb)]
-                h = self.model.fit(X_prime, self.labels)
+                # create a new model every time
+                h = self.model()
+                h = h.fit(X_prime, self.labels)
                 y_prob = self.predictProb(h, X_prime)[:, 1]
                 beta = self.findBeta(y_prob, self.labels)
                 H.append((h, beta))
