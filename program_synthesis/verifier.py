@@ -1,7 +1,5 @@
 import numpy as np
-from label_aggregator import LabelAggregator
-import math
-from utils import calcF1
+from program_synthesis.label_aggregator import LabelAggregator
 
 eta = 3/2
 delta = 0.001
@@ -24,12 +22,11 @@ def findNu(M):
     return 1/2 - 1/((M+1) ** eta)
 
 class Verifier(object):
-    def __init__(self, H, H_C, y_star, primitive_XL, primitive_XU, n, w):
-        self.H = H
-        self.H_C = H_C
-        self.y_star = y_star
-        self.primitive_XL = primitive_XL
-        self.primitive_XU = primitive_XU
+    def __init__(self, H_C, y_star, primitive_XL_Label, primitive_XU_Label, n, w):
+        self.H_C = H_C # Commited set
+        self.y_star = y_star # True label of the training set -> (-1,1)
+        self.primitive_XL_Label = primitive_XL_Label # Labelled training dataset (Features)
+        self.primitive_XU_Label = primitive_XU_Label # Unlabelled training dataset (Features)
         self.n = n
         self.w = w
 
@@ -39,7 +36,7 @@ class Verifier(object):
     def train_gen_mode(self):
         gen_model = LabelAggregator()
         # the generative model does NOT use labels when training
-        gen_model.train(self.primitive_XU)
+        gen_model.train(self.primitive_XL_Label)
         self.gen_model = gen_model
 
 
@@ -57,4 +54,7 @@ class Verifier(object):
         nu is synonym for gamma in their code
         use findNu for accurate nu
         """
-        return self.y_tilde_L[np.where(np.abs(self.y_tilde_L - 0.5)) <= nu]
+        uncertain_idx = np.where(np.abs(self.y_tilde_U - 0.5) <= nu)[0]
+        if len(uncertain_idx) == 0:
+            return []
+        return self.y_tilde_L[uncertain_idx]

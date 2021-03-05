@@ -4,6 +4,7 @@ import sklearn.linear_model
 from program_synthesis.synthesizer import Synthesizer
 from program_synthesis.utils import calcF1
 from program_synthesis.pruner import Pruner
+from program_synthesis.verifier import Verifier
 
 from data.loader import DataLoader
 loader = DataLoader()
@@ -22,4 +23,10 @@ w = 0.5
 pruner = Pruner(H, H_C, train_ground, train_primitive_matrix, val_primitive_matrix, n, w, X_comb)
 h_best = pruner.prune()
 
+H_C.append(h_best)
+
+verifier = Verifier(H_C, val_ground, train_primitive_matrix, val_primitive_matrix, n, w)
+verifier.verify()
+uncertain_points = verifier.get_uncertain_points()
+print(uncertain_points)
 
