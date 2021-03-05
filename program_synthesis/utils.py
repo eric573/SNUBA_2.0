@@ -19,8 +19,10 @@ def calcF1(y_star, y_prob, beta):
     return 2 * (precision * recall) / (precision + recall)
 
 def calcJaccard(y_U, n, beta):
-    idx = np.where(np.abs(y_prob - 0.5) >= beta)
-    intersect = len(np.in1d(idx, n))
-    union = len(np.union1d(idx, n))
-    return 1 - (intersect / union)
+    idx = np.where(np.abs(y_U - 0.5) >= beta)
+    n_idx = np.where(n == 1)
+    intersect = np.sum(np.in1d(idx[0], n_idx[0]))
+    union = len(np.union1d(idx[0], n_idx[0]))
+    # print(1 - (intersect / union), intersect, union)
+    return 1 - (intersect / union), idx
 
