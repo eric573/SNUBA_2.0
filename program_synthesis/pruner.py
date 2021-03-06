@@ -13,6 +13,8 @@ class Pruner(object):
         self.X_comb_idx = X_comb_idx
 
     def prune(self):
+        # TODO: Keep best 3 heuristics 
+        
         h_best = None
         bestScore = 0
         best_idx = None

@@ -16,7 +16,7 @@ train_prob_labels = np.array([])
 val_prob_labels = np.array([])
 
 model = sklearn.linear_model.LogisticRegression
-synthesizer = Synthesizer(model, val_primitive_matrix, val_ground, min_D=2)
+synthesizer = Synthesizer(model, val_primitive_matrix, val_ground, min_D=1)
 H, X_comb = synthesizer.solve()
 
 H_C = []
