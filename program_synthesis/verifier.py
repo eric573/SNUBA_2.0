@@ -25,8 +25,8 @@ class Verifier(object):
     def __init__(self, H_C, y_star, primitive_XL_Label, primitive_XU_Label, n, w):
         self.H_C = H_C # Commited set
         self.y_star = y_star # True label of the training set -> (-1,1)
-        self.primitive_XL_Label = primitive_XL_Label # Labelled training dataset (Features)
-        self.primitive_XU_Label = primitive_XU_Label # Unlabelled training dataset (Features)
+        self.primitive_XL_Label = primitive_XL_Label # Labeled training dataset (Features)
+        self.primitive_XU_Label = primitive_XU_Label # Unlabeled training dataset (Features)
         self.n = n
         self.w = w
 
@@ -46,15 +46,18 @@ class Verifier(object):
         else:
             print('WARNING: using existing generative model. Maybe doing something wrong!')
 
-        self.y_tilde_U = self.gen_model.marginals(self.primitive_XU)
-        self.y_tilde_L = self.gen_model.marginals(self.primitive_XL)
+        self.y_tilde_U = self.gen_model.marginals(self.primitive_XU_Label)
+        self.y_tilde_L = self.gen_model.marginals(self.primitive_XL_Label)
+        # print(self.primitive_XU_Label)
 
     def get_uncertain_points(self, nu=0.1):
         """
         nu is synonym for gamma in their code
         use findNu for accurate nu
         """
-        uncertain_idx = np.where(np.abs(self.y_tilde_U - 0.5) <= nu)[0]
+        uncertain_idx = np.where(np.abs(self.y_tilde_L - 0.5) <= nu)[0]
+        print(self.y_tilde_L, nu)
+        print(uncertain_idx)
         if len(uncertain_idx) == 0:
             return []
         return self.y_tilde_L[uncertain_idx]

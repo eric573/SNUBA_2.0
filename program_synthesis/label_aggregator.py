@@ -167,4 +167,5 @@ class LabelAggregator(object):
     def marginals(self, X):
         # X = X.todense()
         marginals = odds_to_prob(X.dot(self.w))
-        return np.array(marginals)[0]
+        # print(marginals, marginals.shape)
+        return np.array(marginals) #[0] TODO: Why was there a 0

@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
 from tqdm import tqdm, trange
-from program_synthesis.utils import calcF1
+from program_synthesis.utils import calcF1, apply_threshold
 np.seterr('raise')
 
 class Synthesizer(object):
@@ -48,6 +48,6 @@ class Synthesizer(object):
         f1 = np.zeros(len(beta_list))
         for j in range(len(beta_list)):
             beta = beta_list[j]
-            f1[j] = calcF1(label, y_prob, beta)
+            f1[j] = calcF1(label, apply_threshold(y_prob, beta))
         return beta_list[np.argmax(f1)]
 
