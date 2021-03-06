@@ -25,7 +25,7 @@ class Synthesizer(object):
                 H: list of (h, b) where h is the heuristics and b is the beta
                 X_comb: list of combinations of features used by each heuristics
         """
-        print('{} choose {}'.format(self.primitive_X.shape[1], min(self.min_D, self.primitive_X.shape[1] + 1)))
+        print('{} choose {}'.format(self.primitive_X.shape[1], self.min_D - 1))
         for D_prime in range(1, min(self.min_D, self.primitive_X.shape[1] + 1)):
             idx_comb = itertools.combinations(range(self.primitive_X.shape[1]), D_prime)
             for comb in idx_comb:

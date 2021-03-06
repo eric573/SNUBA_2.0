@@ -13,14 +13,6 @@ delta = 0.001
 #         alpha_hat.append(alpha_i)
 #
 #     return np.array(alpha_hat)
-
-def findNu(M):
-    """
-    M is the number of heuristics in the committed set
-    """
-    # WARNING: the paper said M+1, but their code is only M.
-    return 1/2 - 1/((M+1) ** eta)
-
 class Verifier(object):
     def __init__(self, H_C, y_star, primitive_XL_Label, primitive_XU_Label, n, w):
         self.H_C = H_C # Commited set
@@ -61,3 +53,11 @@ class Verifier(object):
         if len(uncertain_idx) == 0:
             return []
         return self.y_tilde_L[uncertain_idx]
+
+
+    def findNu(self, M):
+        """
+        M is the number of heuristics in the committed set
+        """
+        # WARNING: the paper said M+1, but their code is only M.
+        return 1/2 - 1/((M+1) ** eta)
