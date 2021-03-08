@@ -12,14 +12,11 @@ class Pruner(object):
         self.w = w
         self.X_comb_idx = X_comb_idx
 
-    def prune(self):
+    def prune(self, basecase=True):
         # TODO: Keep best 3 heuristics 
-        
-        h_best = None
-        bestScore = 0
-        best_idx = None
-        best_y_prob = None
-        best_X_comb = None
+
+        h_best = []
+
         for ((h, beta), X_comb) in zip(self.H, self.X_comb_idx):
             y_L = h.predict_proba(self.primitive_XL[:, np.array(X_comb)])[:, 1]
             y_prob = apply_threshold(y_L, beta)
@@ -28,11 +25,9 @@ class Pruner(object):
             y_U = h.predict_proba(self.primitive_XU[:, np.array(X_comb)])[:, 1]
             j_score, idx = calcJaccard(y_U, self.n, beta)
 
-            if self.w * (j_score + f_score) >= bestScore:
-                h_best = (h, beta)
-                bestScore = (1 - self.w) * j_score + self.w * f_score
-                best_idx = idx
-                best_y_prob = y_prob
-                best_X_comb = X_comb
-        self.n[best_idx] = 1
-        return h_best, best_X_comb, best_y_prob
+            h_best.append(((h, beta), idx, y_prob, X_comb, (1 - self.w) * j_score + self.w * f_score))
+        h_best.sort(key=lambda x: -x[-1])
+        for i in range(3 if basecase else 1):
+            self.n[h_best[i][1]] = 1
+
+        return h_best
