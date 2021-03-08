@@ -12,7 +12,7 @@ Output: Candidate set of heuristic H
 """
 class HeuristicGenerator(object):
     def __init__(self, ):
-        print("hel")
+        print("hello")
 
 
 loader = DataLoader()

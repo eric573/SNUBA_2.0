@@ -55,7 +55,7 @@ for i in range(25):
     idx = verifier.get_uncertain_points(nu=verifier.findNu(len(H_C)))
     basecase = False
     print(f"Uncerntain points count: {len(idx)}")
-    if len(idx) == 0:
+    if len(idx) <= 1:
         print("STOP")
         break
 
