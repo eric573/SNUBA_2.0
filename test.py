@@ -6,6 +6,8 @@ from program_synthesis.utils import calcF1, apply_threshold
 from program_synthesis.pruner import Pruner
 from program_synthesis.verifier import Verifier
 
+from joblib import dump, load
+
 from data.loader import DataLoader
 basecase = True
 
@@ -21,10 +23,10 @@ n = np.zeros(len(train_primitive_matrix))
 w = 0.5
 idx = None
 
-for i in range(25):
+for i in range(5):
     print(f"Iter {i}")
     model = sklearn.linear_model.LogisticRegression
-    synthesizer = Synthesizer(model, val_primitive_matrix, val_ground, min_D=2)
+    synthesizer = Synthesizer(model, val_primitive_matrix, val_ground, min_D=1)
     H, X_comb = synthesizer.solve(idx=idx)
 
     # No shrinking of the val primitive matrix after getting uncertain index
@@ -59,4 +61,5 @@ for i in range(25):
         print("STOP")
         break
 
-
+# persist models to memory bois
+dump(H_C, 'models.joblib')
