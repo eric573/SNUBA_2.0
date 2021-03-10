@@ -55,6 +55,12 @@ for i in range(5):
     verifier = Verifier(H_C, val_ground, val_prob_labels, train_prob_labels, n, w)
     verifier.verify()
     idx = verifier.get_uncertain_points(nu=verifier.findNu(len(H_C)))
+
+    # Evaluate
+    val_accuracy, train_accuracy, val_coverage, train_coverage = verifier.evaluate(train_ground, val_ground)
+    print("Train: Accuracy {}. Coverage {}.".format(train_accuracy, train_coverage))
+    print("Val: Accuracy {}. Coverage {}.".format(val_accuracy, val_coverage))
+
     basecase = False
     print(f"Uncerntain points count: {len(idx)}")
     if len(idx) <= 1:

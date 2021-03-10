@@ -29,5 +29,18 @@ def calcJaccard(y_U, n, beta):
     intersect = np.sum(np.in1d(idx[0], n_idx[0]))
     union = len(np.union1d(idx[0], n_idx[0]))
     # print(1 - (intersect / union), intersect, union)
+    if union == 0:
+        return 0, idx
     return 1 - (intersect / union), idx
 
+
+def calculate_accuracy(marginals, ground):
+    total = np.shape(np.where(marginals != 0.5))[1]
+    labels = np.sign(2 * (marginals - 0.5))
+    return np.sum(labels == ground) / float(total)
+
+
+def calculate_coverage(marginals):
+    total = np.shape(np.where(marginals != 0.5))[1]
+    labels = np.sign(2 * (marginals - 0.5))
+    return total / float(len(labels))

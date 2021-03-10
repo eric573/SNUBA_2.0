@@ -52,7 +52,7 @@ class Synthesizer(object):
         return heuristic_model.predict_proba(X_prime)
 
     def findBeta(self, y_prob, label):
-        beta_list = np.arange(0, 0.55, 0.05)
+        beta_list = np.linspace(0.25,0.45,10)
         f1 = np.zeros(len(beta_list))
         for j in range(len(beta_list)):
             beta = beta_list[j]

@@ -1,5 +1,6 @@
 import numpy as np
 from program_synthesis.label_aggregator import LabelAggregator
+from program_synthesis.utils import *
 
 eta = 3/2
 delta = 0.001
@@ -50,6 +51,16 @@ class Verifier(object):
         if len(uncertain_idx) == 0:
             return []
         return uncertain_idx
+
+    def evaluate(self, train_ground, val_ground):
+        """
+        Evaluate accuracy and coverage for (y_tilde_U, train_ground) (y_tilde_L, val_ground)
+        """
+        self.val_accuracy = calculate_accuracy(self.y_tilde_L, val_ground)
+        self.train_accuracy = calculate_accuracy(self.y_tilde_U, train_ground)
+        self.val_coverage = calculate_coverage(self.y_tilde_L)
+        self.train_coverage = calculate_coverage(self.y_tilde_U)
+        return self.val_accuracy, self.train_accuracy, self.val_coverage, self.train_coverage
 
 
     def findNu(self, M):
