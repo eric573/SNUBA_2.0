@@ -23,7 +23,7 @@ n = np.zeros(len(train_primitive_matrix))
 w = 0.5
 idx = None
 
-for i in range(5):
+for i in range(20):
     print(f"Iter {i}")
     model = sklearn.linear_model.LogisticRegression
     synthesizer = Synthesizer(model, val_primitive_matrix, val_ground, min_D=1)
@@ -68,4 +68,7 @@ for i in range(5):
         break
 
 # persist models to memory bois
-dump(H_C, 'models.joblib')
+# dump(H_C, 'models.joblib')
+# persist the labels
+dump(verifier.y_tilde_U, 'train_prob_labels.joblib')
+print('train prob labels saved')
