@@ -5,8 +5,8 @@ from program_synthesis.utils import calcF1, apply_threshold
 np.seterr('raise')
 
 class Synthesizer(object):
-    def __init__(self, model, primitive_X, labels, min_D = 2):
-        self.model = model
+    def __init__(self, models, primitive_X, labels, min_D = 2):
+        self.models = models
         self.primitive_X = primitive_X
 
         self.labels = labels
@@ -34,18 +34,19 @@ class Synthesizer(object):
                 H: list of (h, b) where h is the heuristics and b is the beta
                 X_comb: list of combinations of features used by each heuristics
         """
-        print('{} choose {}'.format(primitive_X_new.shape[1], self.min_D - 1))
+        print('Features: {} choose {}'.format(primitive_X_new.shape[1], self.min_D - 1))
         for D_prime in range(1, min(self.min_D, primitive_X_new.shape[1] + 1)):
             idx_comb = itertools.combinations(range(primitive_X_new.shape[1]), D_prime)
             for comb in idx_comb:
                 X_prime = primitive_X_new[:,np.array(comb)]
-                # create a new model every time
-                h = self.model()
-                h = h.fit(X_prime, labels_new)
-                y_prob = self.predictProb(h, X_prime)[:, 1]
-                beta = self.findBeta(y_prob, labels_new)
-                H.append((h, beta))
-                X_comb.append(comb)
+                for i, model in enumerate(self.models):
+                    # create a new model every time
+                    h = model()
+                    h = h.fit(X_prime, labels_new)
+                    y_prob = self.predictProb(h, X_prime)[:, 1]
+                    beta = self.findBeta(y_prob, labels_new)
+                    H.append((h, beta))
+                    X_comb.append(comb)
         return H, X_comb
 
     def predictProb(selfs, heuristic_model, X_prime):

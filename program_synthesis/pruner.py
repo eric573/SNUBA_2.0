@@ -4,17 +4,15 @@ from program_synthesis.utils import calcF1, calcJaccard, apply_threshold
 class Pruner(object):
     def __init__(self, H, H_C, y_star, primitive_XL, primitive_XU, n, w, X_comb_idx):
         self.H = H
-        self.H_C = H_C # TODO: Add h_best to H_C
+        self.H_C = H_C
         self.y_star = y_star
-        self.primitive_XL = primitive_XL
-        self.primitive_XU = primitive_XU
+        self.primitive_XL = primitive_XL # TODO: code cleanup - we use this in test.py
+        self.primitive_XU = primitive_XU #TODO: code cleanup - we use this in test.py
         self.n = n
         self.w = w
         self.X_comb_idx = X_comb_idx
 
     def prune(self, basecase=True):
-        # TODO: Keep best 3 heuristics 
-
         h_best = []
 
         for ((h, beta), X_comb) in zip(self.H, self.X_comb_idx):
