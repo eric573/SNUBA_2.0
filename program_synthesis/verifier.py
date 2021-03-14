@@ -1,6 +1,8 @@
 import numpy as np
 from program_synthesis.label_aggregator import LabelAggregator
 from program_synthesis.utils import *
+from sklearn.naive_bayes import BernoulliNB
+
 
 eta = 3/2
 delta = 0.001
@@ -15,7 +17,7 @@ delta = 0.001
 #
 #     return np.array(alpha_hat)
 class Verifier(object):
-    def __init__(self, H_C, y_star, primitive_XL_Label, primitive_XU_Label, n, w):
+    def __init__(self, H_C, y_star, primitive_XL_Label, primitive_XU_Label, n, w, use_sklearn=False):
         self.H_C = H_C # Commited set
         self.y_star = y_star # True label of the training set -> (-1,1)
         self.primitive_XL_Label = primitive_XL_Label # Labeled training dataset (Features)
@@ -25,12 +27,20 @@ class Verifier(object):
 
         self.gen_model = None
 
+        self.use_sklearn = use_sklearn
+
 
     def train_gen_mode(self):
-        gen_model = LabelAggregator()
-        # the generative model does NOT use labels when training
-        gen_model.train(self.primitive_XL_Label)
-        self.gen_model = gen_model
+        if self.use_sklearn:
+            gen_model = BernoulliNB()
+            # they didn't use the y_stars, but why not? lol
+            gen_model.fit(self.primitive_XL_Label, self.y_star)
+            self.gen_model = gen_model
+        else:
+            gen_model = LabelAggregator()
+            # the generative model does NOT use labels when training
+            gen_model.train(self.primitive_XL_Label)
+            self.gen_model = gen_model
 
 
     def verify(self):
@@ -39,8 +49,22 @@ class Verifier(object):
         else:
             print('WARNING: using existing generative model. Maybe doing something wrong!')
 
-        self.y_tilde_U = self.gen_model.marginals(self.primitive_XU_Label)
-        self.y_tilde_L = self.gen_model.marginals(self.primitive_XL_Label)
+        if self.use_sklearn:
+            self.y_tilde_U = self.gen_model.predict_proba(self.primitive_XU_Label)
+            self.y_tilde_L = self.gen_model.predict_proba(self.primitive_XL_Label)
+            print('y_tilde_U shape', self.y_tilde_U.shape)
+            print('primitive_XU_Label shape', self.primitive_XU_Label.shape)
+            # self.y_tilde_U[np.where(self.primitive_XU_Label) == 0] = 0.5
+            # self.y_tilde_L[np.where(self.primitive_XL_Label) == 0] = 0.5
+
+            # print('y_tilde_U')
+            # print(self.y_tilde_U)
+            # print('y_tilde_L')
+            # print(self.y_tilde_L)
+        else:
+            self.y_tilde_U = self.gen_model.marginals(self.primitive_XU_Label)
+            self.y_tilde_L = self.gen_model.marginals(self.primitive_XL_Label)
+            
 
     def get_uncertain_points(self, nu=0.1):
         """

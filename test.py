@@ -76,7 +76,7 @@ for step in range(20):
             val_prob_labels = np.concatenate((val_prob_labels, val_prob_temp_labels.reshape((-1, 1))), axis=1)
 
     # Verifier
-    verifier = Verifier(H_C, val_ground, val_prob_labels, train_prob_labels, n, w)
+    verifier = Verifier(H_C, val_ground, val_prob_labels, train_prob_labels, n, w, use_sklearn=True)
     verifier.verify()
     idx = verifier.get_uncertain_points(nu=verifier.findNu(len(H_C)))
 
