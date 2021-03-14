@@ -41,7 +41,7 @@ for step in range(20):
     models = [
         sklearn.linear_model.LogisticRegression,
     #    sklearn.neighbors.KNeighborsClassifier,
-    #    sklearn.tree.DecisionTreeClassifier
+        sklearn.tree.DecisionTreeClassifier
     ]
 
     # Synthesizer
@@ -97,5 +97,5 @@ dump(H_C, 'models.joblib')
 print('heuristics saved')
 
 # persist the labels
-dump(verifier.y_tilde_U, 'train_prob_labels.joblib')
+dump(verifier.y_tilde_U, 'saved_labels/lr_and_dt.joblib')
 print('train prob labels saved')
