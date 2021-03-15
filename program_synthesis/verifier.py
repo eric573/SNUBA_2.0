@@ -64,7 +64,7 @@ class Verifier(object):
         else:
             self.y_tilde_U = self.gen_model.marginals(self.primitive_XU_Label)
             self.y_tilde_L = self.gen_model.marginals(self.primitive_XL_Label)
-            
+
 
     def get_uncertain_points(self, nu=0.1):
         """
@@ -74,6 +74,10 @@ class Verifier(object):
         uncertain_idx = np.where(np.abs(self.y_tilde_L - 0.5) <= nu)[0]
         if len(uncertain_idx) == 0:
             return []
+        return uncertain_idx
+
+    def update_n(self, nu=0.1):
+        uncertain_idx = np.where(np.abs(self.y_tilde_U - 0.5) >= nu)[0]
         return uncertain_idx
 
     def evaluate(self, train_ground, val_ground):

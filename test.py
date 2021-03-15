@@ -41,7 +41,7 @@ for step in range(20):
     models = [
         sklearn.linear_model.LogisticRegression,
     #    sklearn.neighbors.KNeighborsClassifier,
-        sklearn.tree.DecisionTreeClassifier
+    #    sklearn.tree.DecisionTreeClassifier
     ]
 
     # Synthesizer
@@ -75,10 +75,13 @@ for step in range(20):
             train_prob_labels = np.concatenate((train_prob_labels, train_prob_temp_labels.reshape((-1, 1))), axis=1)
             val_prob_labels = np.concatenate((val_prob_labels, val_prob_temp_labels.reshape((-1, 1))), axis=1)
 
+    print("n sum: ", np.sum(n))
     # Verifier
-    verifier = Verifier(H_C, val_ground, val_prob_labels, train_prob_labels, n, w, use_sklearn=True)
+    verifier = Verifier(H_C, val_ground, val_prob_labels, train_prob_labels, n, w, use_sklearn=False)
     verifier.verify()
     idx = verifier.get_uncertain_points(nu=verifier.findNu(len(H_C)))
+    # n = np.zeros(len(train_primitive_matrix))
+    # n[verifier.update_n(nu=verifier.findNu(len(H_C)))] = 1
 
     # Evaluate
     val_accuracy, train_accuracy, val_coverage, train_coverage = verifier.evaluate(train_ground, val_ground)
